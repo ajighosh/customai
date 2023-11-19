@@ -1,16 +1,10 @@
-import logo from "./logo.svg";
 import "./App.css";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Landing from "./pages/Landing";
 import ListGPT from "./pages/ListGPT";
 import AddGPT from "./pages/AddGPT";
+import EditGPT from "./pages/EditGPT";
 
 function App() {
   return (
@@ -38,6 +32,14 @@ function App() {
             element={
               <>
                 <AddGPT />
+              </>
+            }
+          />
+          <Route
+            path="/edit/:id"
+            element={
+              <>
+                <EditGPT />
               </>
             }
           />

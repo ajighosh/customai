@@ -1,17 +1,25 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
 import moment from "moment-timezone";
 import { db } from "./../firebase/firebase";
-import { collection, addDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import backgroundImage from "./../assets/AddGPT.jpg";
-import { v4 as uuidv4 } from "uuid";
+
+import {
+  query,
+  getDocs,
+  collection,
+  where,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 
 import {
   getStorage,
   uploadBytesResumable,
   ref,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 
 const AddGPT = () => {
@@ -22,10 +30,32 @@ const AddGPT = () => {
     email: "",
     website: "",
   });
+  const { id } = useParams();
+  // const [id, setid] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setloading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const MAX_FILE_SIZE_KB = 50;
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const gptCollection = collection(db, "gpts");
+
+        const q = query(gptCollection, where("id", "==", id));
+        const querySnapshot = await getDocs(q);
+
+        const gptDoc = querySnapshot.docs[0];
+        const gptData = gptDoc.data();
+        setImagePreview(gptData.image);
+        setValues(gptData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  }, [id]);
 
   const onSubmit = async (e) => {
     if (
@@ -33,19 +63,9 @@ const AddGPT = () => {
       values.description === "" ||
       values.url === "" ||
       values.email === "" ||
-      values.website === "" ||
-      selectedImage === null
+      values.website === ""
     ) {
       toast.warning("Please input the whole files exactly!", {
-        hideProgressBar: true,
-        autoClose: 500,
-        closeButton: false,
-      });
-      return;
-    }
-
-    if (selectedImage === null) {
-      toast.warning("Please upload image!", {
         hideProgressBar: true,
         autoClose: 500,
         closeButton: false,
@@ -72,11 +92,12 @@ const AddGPT = () => {
     }
 
     setloading(true);
-    let idVal = uuidv4();
 
     if (selectedImage) {
       const storage = getStorage();
-      const storageRef = ref(storage, `images/${idVal}.jpg`);
+
+      const storageRef = ref(storage, `images/${id}.jpg`);
+      deleteObject(storageRef);
 
       const metadata = {
         contentType: "image/jpeg",
@@ -92,21 +113,31 @@ const AddGPT = () => {
         (snapshot) => {},
         (error) => {},
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             const formattedTime = moment()
               .tz("America/Los_Angeles")
               .format("YYYY-MM-DD HH:mm:ss");
-            addDoc(collection(db, "gpts"), {
-              id: idVal,
+
+            const gptCollection = collection(db, "gpts");
+
+            const q = query(gptCollection, where("id", "==", id));
+            const querySnapshot = await getDocs(q);
+
+            const gptDoc = querySnapshot.docs[0];
+            const gptData = gptDoc.data();
+
+            const gptDocRef = doc(db, "gpts", gptDoc.id);
+
+            await updateDoc(gptDocRef, {
+              id: gptData.id,
               ...values,
               image: downloadURL,
               popular: 0,
               time: formattedTime,
             })
               .then((res) => {
-                console.log(res.data);
                 setloading(false);
-                toast.success("Successfully Added!", {
+                toast.success("Successfully Updated!", {
                   hideProgressBar: true,
                   autoClose: 500,
                   closeButton: false,
@@ -118,6 +149,36 @@ const AddGPT = () => {
           });
         }
       );
+    } else {
+      const formattedTime = moment()
+        .tz("America/Los_Angeles")
+        .format("YYYY-MM-DD HH:mm:ss");
+
+      const gptCollection = collection(db, "gpts");
+
+      const q = query(gptCollection, where("id", "==", id));
+      const querySnapshot = await getDocs(q);
+
+      const gptDoc = querySnapshot.docs[0];
+
+      const gptDocRef = doc(db, "gpts", gptDoc.id);
+      await updateDoc(gptDocRef, {
+        id,
+        ...values,
+        image: imagePreview,
+        time: formattedTime,
+      })
+        .then((res) => {
+          setloading(false);
+          toast.success("Successfully Updated!", {
+            hideProgressBar: true,
+            autoClose: 500,
+            closeButton: false,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -153,13 +214,13 @@ const AddGPT = () => {
       <div className="flex flex-col w-full lg:w-full justify-center">
         <div className="mx-[70px] md:mx-[300px]">
           <div className="text-[50px] font-bold text-white">
-            Add{" "}
+            Edit{" "}
             <span className="bg-gradient-to-r bg-clip-text text-transparent from-pink-500 via-purple-500 to-indigo-500">
               Custom GPT
             </span>
           </div>
           <div className="text-[#9B9C9E] mt-[20px] text-[18px]">
-            Please add Custom GPT
+            Please edit Custom GPT
           </div>
           <div className="flex flex-col">
             <div className="relative">
@@ -167,6 +228,7 @@ const AddGPT = () => {
                 className="w-full mt-[20px] pl-[36px]  rounded-[8px] border-[1px] border-[#363A3D]  focus:border-[1px] focus:shadow-custom_login focus:border-[#82DBF7] h-[42px] bg-[#1A1D21] text-white text-[16px] p-[18px]"
                 placeholder="GPT Name"
                 name="name"
+                value={values.name}
                 onChange={(e) =>
                   setValues((values) => ({
                     ...values,
@@ -185,6 +247,7 @@ const AddGPT = () => {
                 className="w-full mt-[10px] pl-[36px]  rounded-[8px] border-[1px] border-[#363A3D]  focus:border-[1px] focus:shadow-custom_login focus:border-[#82DBF7] h-[42px] bg-[#1A1D21] text-white text-[16px] p-[18px]"
                 placeholder="Description"
                 name="description"
+                value={values.description}
                 onChange={(e) =>
                   setValues((values) => ({
                     ...values,
@@ -203,6 +266,7 @@ const AddGPT = () => {
                 className="w-full mt-[10px] pl-[36px]  rounded-[8px] border-[1px] border-[#363A3D]  focus:border-[1px] focus:shadow-custom_login focus:border-[#82DBF7] h-[42px] bg-[#1A1D21] text-white text-[16px] p-[18px]"
                 placeholder="GPT URL"
                 name="url"
+                value={values.url}
                 onChange={(e) =>
                   setValues((values) => ({
                     ...values,
@@ -221,6 +285,7 @@ const AddGPT = () => {
                 className="w-full mt-[10px] pl-[36px]  rounded-[8px] border-[1px] border-[#363A3D]  focus:border-[1px] focus:shadow-custom_login focus:border-[#82DBF7] h-[42px] bg-[#1A1D21] text-white text-[16px] p-[18px]"
                 placeholder="Developer Email"
                 name="email"
+                value={values.email}
                 onChange={(e) =>
                   setValues((values) => ({
                     ...values,
@@ -239,6 +304,7 @@ const AddGPT = () => {
                 className="w-full mt-[10px] pl-[36px]  rounded-[8px] border-[1px] border-[#363A3D]  focus:border-[1px] focus:shadow-custom_login focus:border-[#82DBF7] h-[42px] bg-[#1A1D21] text-white text-[16px] p-[18px]"
                 placeholder="Developer profile URL"
                 name="website"
+                value={values.website}
                 onChange={(e) =>
                   setValues((values) => ({
                     ...values,
@@ -266,7 +332,7 @@ const AddGPT = () => {
               >
                 Image Upload
               </button>
-              {selectedImage && (
+              {imagePreview && (
                 <img
                   src={imagePreview}
                   className="rounded-lg"
@@ -284,7 +350,7 @@ const AddGPT = () => {
             {loading ? (
               <svg
                 aria-hidden="true"
-                class="w-[30px] h-[30px] text-gray-200 animate-spin dark:text-gray-600 fill-white font-bold "
+                className="w-[30px] h-[30px] text-gray-200 animate-spin dark:text-gray-600 fill-white font-bold "
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -299,7 +365,7 @@ const AddGPT = () => {
                 />
               </svg>
             ) : (
-              <span className="text-[18px]">Add</span>
+              <span className="text-[18px]">Update</span>
             )}
           </button>
         </div>
