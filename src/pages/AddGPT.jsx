@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import { db } from "./../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
@@ -15,6 +15,7 @@ import {
 } from "firebase/storage";
 
 const AddGPT = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
     description: "",
@@ -111,6 +112,7 @@ const AddGPT = () => {
                   autoClose: 500,
                   closeButton: false,
                 });
+                navigate("/list");
               })
               .catch((err) => {
                 console.log(err);

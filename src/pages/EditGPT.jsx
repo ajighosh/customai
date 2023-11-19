@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import { db } from "./../firebase/firebase";
 import { toast } from "react-toastify";
@@ -23,6 +23,7 @@ import {
 } from "firebase/storage";
 
 const AddGPT = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
     description: "",
@@ -142,6 +143,7 @@ const AddGPT = () => {
                   autoClose: 500,
                   closeButton: false,
                 });
+                navigate("/list");
               })
               .catch((err) => {
                 console.log(err);
@@ -175,6 +177,7 @@ const AddGPT = () => {
             autoClose: 500,
             closeButton: false,
           });
+          navigate("/list");
         })
         .catch((err) => {
           console.log(err);

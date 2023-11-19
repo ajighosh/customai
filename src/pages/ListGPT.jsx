@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import backgroundImage from "./../assets/ListGPT.jpg";
 
 import { db } from "./../firebase/firebase";
@@ -23,6 +23,9 @@ const ListGPT = () => {
   const [loading, setloading] = useState(false);
   const [origingpts, setorigingpts] = useState([]);
   const [searchString, setSearchString] = useState("");
+  const password = "O+^1Vk27xNia";
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,33 +99,63 @@ const ListGPT = () => {
   };
 
   const handleDeleteGPT = async (id) => {
-    setloading(true);
-    try {
-      setgpts([]);
+    const userInput = window.prompt("Please enter password:");
+    if (userInput !== null && userInput.trim() === password) {
+      setloading(true);
+      try {
+        setgpts([]);
 
-      const gptCollection = collection(db, "gpts");
+        const gptCollection = collection(db, "gpts");
 
-      const q = query(gptCollection, where("id", "==", id));
-      const querySnapshot = await getDocs(q);
-      const gptDoc = querySnapshot.docs[0];
-      const gptDocRef = doc(db, "gpts", gptDoc.id);
-      await deleteDoc(gptDocRef);
+        const q = query(gptCollection, where("id", "==", id));
+        const querySnapshot = await getDocs(q);
+        const gptDoc = querySnapshot.docs[0];
+        const gptDocRef = doc(db, "gpts", gptDoc.id);
+        await deleteDoc(gptDocRef);
 
-      const storage = getStorage();
-      const storageRef = ref(storage, `images/${id}.jpg`);
-      deleteObject(storageRef);
+        const storage = getStorage();
+        const storageRef = ref(storage, `images/${id}.jpg`);
+        deleteObject(storageRef);
 
-      toast.success("Successfully Deleted!", {
-        hideProgressBar: true,
-        autoClose: 500,
-        closeButton: false,
-      });
+        toast.success("Successfully Deleted!", {
+          hideProgressBar: true,
+          autoClose: 500,
+          closeButton: false,
+        });
 
-      setloading(false);
+        setloading(false);
 
-      setorigingpts((origingpts) => origingpts.filter((gpt) => gpt.id !== id));
-    } catch (err) {
-      console.log(err);
+        setorigingpts((origingpts) =>
+          origingpts.filter((gpt) => gpt.id !== id)
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (userInput !== null) {
+      toast.warning(
+        "Please input password correctly! Only admin can elete the customgpts.",
+        {
+          hideProgressBar: true,
+          autoClose: 500,
+          closeButton: false,
+        }
+      );
+    }
+  };
+
+  const handleEditClick = (id) => {
+    const userInput = window.prompt("Please enter password:");
+    if (userInput !== null && userInput.trim() === password) {
+      navigate(`/edit/${id}`);
+    } else if (userInput !== null) {
+      toast.warning(
+        "Please input password correctly! Only admin can edit the customgpts.",
+        {
+          hideProgressBar: true,
+          autoClose: 500,
+          closeButton: false,
+        }
+      );
     }
   };
 
@@ -156,80 +189,80 @@ const ListGPT = () => {
           </NavLink>
         </div>
         <div className="mx-[50px]">
-          <div className="mt-[10px] flex flex-col sm:items-center sm:flex-row sm:space-x-[30px]">
-            <div>
-              {order === "Popular" && (
-                <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[6px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
-                  <div
-                    onClick={() => setorder("Popular")}
-                    className="bg-[#353740] rounded-md px-[5px] py-[10px] w-[100px] border border-[#61626D] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">Popular</span>
+          <div className="mt-[10px] flex flex-col sm:items-center sm:flex-row justify-between sm:space-x-[30px]">
+            <div className="flex items-center space-x-2 sm:space-x-[10px]">
+              <div>
+                {order === "Popular" && (
+                  <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[4px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
+                    <div
+                      onClick={() => setorder("Popular")}
+                      className="bg-[#353740] hover:border-[#61626D] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#61626D] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">Popular</span>
+                    </div>
+                    <div
+                      onClick={() => setorder("New")}
+                      className="bg-[#202123] hover:border-[#61626D] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">New</span>
+                    </div>
+                    <div
+                      onClick={() => setorder("All")}
+                      className="bg-[#202123] hover:border-[#61626D] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">All</span>
+                    </div>
                   </div>
-                  <div
-                    onClick={() => setorder("New")}
-                    className="bg-[#202123] rounded-md px-[5px] py-[10px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">New</span>
+                )}
+                {order === "New" && (
+                  <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[4px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
+                    <div
+                      onClick={() => setorder("Popular")}
+                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">Popular</span>
+                    </div>
+                    <div
+                      onClick={() => setorder("New")}
+                      className="bg-[#353740] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#61626D] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">New</span>
+                    </div>
+                    <div
+                      onClick={() => setorder("All")}
+                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">All</span>
+                    </div>
                   </div>
-                  <div
-                    onClick={() => setorder("All")}
-                    className="bg-[#202123] rounded-md py-[10px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">All</span>
+                )}
+                {order === "All" && (
+                  <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[4px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
+                    <div
+                      onClick={() => setorder("Popular")}
+                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">Popular</span>
+                    </div>
+                    <div
+                      onClick={() => setorder("New")}
+                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">New</span>
+                    </div>
+                    <div
+                      onClick={() => setorder("All")}
+                      className="bg-[#353740] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#61626D] flex flex-row justify-center items-center hover:cursor-pointer"
+                    >
+                      <span className="text-white font-medium">All</span>
+                    </div>
                   </div>
-                </div>
-              )}
-              {order === "New" && (
-                <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[6px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
-                  <div
-                    onClick={() => setorder("Popular")}
-                    className="bg-[#202123] rounded-md py-[10px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">Popular</span>
-                  </div>
-                  <div
-                    onClick={() => setorder("New")}
-                    className="bg-[#353740] rounded-md px-[5px] py-[10px] w-[100px] border border-[#61626D] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">New</span>
-                  </div>
-                  <div
-                    onClick={() => setorder("All")}
-                    className="bg-[#202123] rounded-md py-[10px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">All</span>
-                  </div>
-                </div>
-              )}
-              {order === "All" && (
-                <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[6px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
-                  <div
-                    onClick={() => setorder("Popular")}
-                    className="bg-[#202123] rounded-md px-[5px] py-[10px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">Popular</span>
-                  </div>
-                  <div
-                    onClick={() => setorder("New")}
-                    className="bg-[#202123] rounded-md px-[5px] py-[10px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">New</span>
-                  </div>
-                  <div
-                    onClick={() => setorder("All")}
-                    className="bg-[#353740] rounded-md px-[5px] py-[10px] w-[100px] border border-[#61626D] flex flex-row justify-center items-center hover:cursor-pointer"
-                  >
-                    <span className="text-white font-medium">All</span>
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            <div className="">
               <div className="relative">
                 <input
-                  className="pl-[39px] w-[310px] py-[27px] outline-none focus:border-[#61626D] rounded-[8px] border-[#363A3D] border-[1px]  focus:border-[1px] focus:shadow-custom_login  h-[42px] bg-[#1A1D21] text-white text-[18px] p-[18px]"
+                  className="pl-[39px] w-[310px] py-[11px] outline-none focus:border-[#61626D] rounded-lg border-[#61626D] border-[1px]  focus:border-[1px] focus:shadow-custom_login bg-[#1A1D21] text-white text-[14px]"
                   placeholder="GPT's Search"
                   name="name"
                   onChange={(e) => {
@@ -243,13 +276,13 @@ const ListGPT = () => {
                   }}
                   onKeyDown={onKeyDownSearch}
                 />
-                <i className="absolute fa-solid fa-magnifying-glass top-[20px] left-[15px] text-[#aaaaaa]"></i>
+                <i className="absolute fa-solid fa-magnifying-glass top-[15px] left-[15px] text-[#aaaaaa]"></i>
               </div>
             </div>
             <div>
               <NavLink
                 to="/add"
-                className="w-[310px] mt-[20px] sm:mt-[0px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600 rounded-[12px] h-[57px]  font-medium text-[18px] flex justify-center items-center"
+                className="w-[310px] py-[9px] mt-[20px] sm:mt-[0px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600 rounded-lg  font-medium text-[18px] flex justify-center items-center"
               >
                 List your GPT's For Free
               </NavLink>
@@ -303,7 +336,7 @@ const ListGPT = () => {
                 <div className="text-white w-[100px] justify-center">
                   <button
                     onClick={(e) => handleGotoGPTURL(gpt.id, gpt.url)}
-                    className="w-full bg-gradient-to-r bg-[#333333] text-white hover:bg-[#222222] rounded-lg h-[30px]  font-medium text-[16px] flex justify-center items-center"
+                    className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600 rounded-lg h-[30px]  font-medium text-[16px] flex justify-center items-center"
                   >
                     Open GPT
                   </button>
@@ -329,11 +362,14 @@ const ListGPT = () => {
               </NavLink>
             </div>
             <div className="absolute right-[20px] bottom-[20px] space-x-[10px] text-white">
-              <NavLink to={`/edit/${gpt.id}`}>
-                <span className="cursor-pointer">
-                  <i className="fa-solid fa-pencil text-[12px]"></i>
-                </span>
-              </NavLink>
+              <span
+                className="cursor-pointer"
+                onClick={(e) => {
+                  handleEditClick();
+                }}
+              >
+                <i className="fa-solid fa-pencil text-[12px]"></i>
+              </span>
 
               <span
                 className="cursor-pointer"
