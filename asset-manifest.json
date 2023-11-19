@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/customai/static/css/main.6ed6f707.css",
-    "main.js": "/customai/static/js/main.30e6f067.js",
-    "static/js/787.aad11d4d.chunk.js": "/customai/static/js/787.aad11d4d.chunk.js",
-    "static/media/back2.jpg": "/customai/static/media/back2.0dbae9d078e6df0f8ab8.jpg",
-    "static/media/ListGPT.jpg": "/customai/static/media/ListGPT.f83a343971939ff61b63.jpg",
-    "static/media/AddGPT.jpg": "/customai/static/media/AddGPT.627e6a0dfe134674fa2a.jpg",
-    "index.html": "/customai/index.html",
-    "main.6ed6f707.css.map": "/customai/static/css/main.6ed6f707.css.map",
-    "main.30e6f067.js.map": "/customai/static/js/main.30e6f067.js.map",
-    "787.aad11d4d.chunk.js.map": "/customai/static/js/787.aad11d4d.chunk.js.map"
+    "main.css": "/static/css/main.6ed6f707.css",
+    "main.js": "/static/js/main.fa5248de.js",
+    "static/js/787.aad11d4d.chunk.js": "/static/js/787.aad11d4d.chunk.js",
+    "static/media/back2.jpg": "/static/media/back2.0dbae9d078e6df0f8ab8.jpg",
+    "static/media/ListGPT.jpg": "/static/media/ListGPT.f83a343971939ff61b63.jpg",
+    "static/media/AddGPT.jpg": "/static/media/AddGPT.627e6a0dfe134674fa2a.jpg",
+    "index.html": "/index.html",
+    "main.6ed6f707.css.map": "/static/css/main.6ed6f707.css.map",
+    "main.fa5248de.js.map": "/static/js/main.fa5248de.js.map",
+    "787.aad11d4d.chunk.js.map": "/static/js/787.aad11d4d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6ed6f707.css",
-    "static/js/main.30e6f067.js"
+    "static/js/main.fa5248de.js"
   ]
 }
