@@ -21,5 +21,8 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Fix netlify-cli installation issue
+      run: npm install -g netlify-cli
+
     - name: Build
       run: npm run build  # Replace with your build script if needed
