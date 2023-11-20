@@ -100,7 +100,7 @@ const ListGPT = () => {
 
   const handleDeleteGPT = async (id) => {
     const userInput = window.prompt(
-      "For Edditing/ Deleting GPT's please contact help@customgpts.in."
+      "For Edditing/Deleting GPT's please contact help@customgpts.in."
     );
     if (userInput !== null && userInput.trim() === password) {
       setloading(true);
@@ -146,7 +146,9 @@ const ListGPT = () => {
   };
 
   const handleEditClick = (id) => {
-    const userInput = window.prompt("Please enter password:");
+    const userInput = window.prompt(
+      "For Edditing/Deleting GPT's please contact help@customgpts.in."
+    );
     if (userInput !== null && userInput.trim() === password) {
       navigate(`/edit/${id}`);
     } else if (userInput !== null) {
@@ -191,8 +193,8 @@ const ListGPT = () => {
           </NavLink>
         </div>
         <div className="mx-[50px]">
-          <div className="mt-[10px] flex flex-col sm:items-center sm:flex-row justify-between sm:space-x-[30px]">
-            <div className="flex items-center space-x-2 sm:space-x-[10px]">
+          <div className="mt-[10px] flex flex-col sm:items-center md:flex-row justify-between sm:space-x-[30px]">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-[10px]">
               <div>
                 {order === "Popular" && (
                   <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[4px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
@@ -264,7 +266,7 @@ const ListGPT = () => {
 
               <div className="relative">
                 <input
-                  className="pl-[39px] w-[310px] py-[11px] outline-none focus:border-[#61626D] rounded-lg border-[#61626D] border-[1px]  focus:border-[1px] focus:shadow-custom_login bg-[#1A1D21] text-white text-[14px]"
+                  className="pl-[39px] w-[300px] py-[11px] outline-none focus:border-[#61626D] rounded-lg border-[#61626D] border-[1px]  focus:border-[1px] focus:shadow-custom_login bg-[#1A1D21] text-white text-[14px]"
                   placeholder="GPT's Search"
                   name="name"
                   onChange={(e) => {
@@ -281,14 +283,22 @@ const ListGPT = () => {
                 <i className="absolute fa-solid fa-magnifying-glass top-[15px] left-[15px] text-[#aaaaaa]"></i>
               </div>
             </div>
-            <div>
+            <div className="hidden sm:block">
               <NavLink
                 to="/add"
-                className="w-[310px] py-[9px] mt-[20px] sm:mt-[0px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600 rounded-lg  font-medium text-[18px] flex justify-center items-center"
+                className="w-[100px] sm:w-[310px] py-[9px] mt-[20px] sm:mt-[0px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600 rounded-lg  font-medium text-[18px] flex justify-center items-center"
               >
                 List your GPT's For Free
               </NavLink>
             </div>
+          </div>
+          <div className="sm:hidden w-full justify-center">
+            <NavLink
+              to="/add"
+              className="w-[300px] mx-auto sm:hidden  py-[9px] mt-[20px] sm:mt-[0px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600 rounded-lg  font-medium text-[18px] flex justify-center items-center"
+            >
+              List your GPT's For Free
+            </NavLink>
           </div>
 
           <div className="container mx-auto p-4">
@@ -319,11 +329,11 @@ const ListGPT = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[20px] mx-[50px] mt-[-35px]">
+      <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[20px] md:mx-[50px] mt-[-05px] md:mt-[-35px]">
         {gpts.map((gpt, index) => (
           <div
             key={index}
-            className="w-full h-[240px] bg-[#111111] rounded-lg mt-[0px] relative"
+            className="w-full max-w-[290px] h-[240px] bg-[#111111] rounded-lg mt-[0px] relative"
           >
             <div className="flex items-center w-full">
               <img
@@ -348,7 +358,7 @@ const ListGPT = () => {
             <div className="text-[#bbbbbb] m-[20px] mt-[10px] w-[90%] break-words text-[12px]">
               <div>{truncateString(gpt.description, 170)}</div>
             </div>
-            <div className="absolute left-[10px] bottom-[10px] w-[14  0px] gap-2 rounded-lg h-[40px] text-white justify-between items-center flex p-[10px]">
+            <div className="absolute left-[10px] bottom-[10px] w-[140px] gap-2 rounded-lg h-[40px] text-white justify-between items-center flex p-[10px]">
               <span className="text-[12px]">Developer info</span>
               <span
                 className="cursor-pointer"

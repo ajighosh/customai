@@ -154,7 +154,7 @@ const AddGPT = () => {
     >
       <div className="flex flex-col w-full lg:w-full justify-center">
         <div className="mx-[70px] md:mx-[300px]">
-          <div className="text-[50px] font-bold text-white">
+          <div className="flex justify-center  text-[40px] md:text-[50px] font-bold text-white">
             Add{" "}
             <span className="bg-gradient-to-r bg-clip-text text-transparent from-pink-500 via-purple-500 to-indigo-500">
               Custom GPT
