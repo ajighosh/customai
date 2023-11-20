@@ -18,8 +18,5 @@ jobs:
       with:
         node-version: 14  # You can specify the Node.js version you need
 
-    - name: Fix netlify-cli installation issue
-      run: npm install -g netlify-cli
-
     - name: Build
       run: npm run build  # Replace with your build script if needed
