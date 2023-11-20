@@ -99,7 +99,9 @@ const ListGPT = () => {
   };
 
   const handleDeleteGPT = async (id) => {
-    const userInput = window.prompt("Please enter password:");
+    const userInput = window.prompt(
+      "For Edditing/ Deleting GPT's please contact help@customgpts.in."
+    );
     if (userInput !== null && userInput.trim() === password) {
       setloading(true);
       try {
@@ -202,13 +204,13 @@ const ListGPT = () => {
                     </div>
                     <div
                       onClick={() => setorder("New")}
-                      className="bg-[#202123] hover:border-[#61626D] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                      className="bg-[#202123] hover:border-[#353740] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
                     >
                       <span className="text-white font-medium">New</span>
                     </div>
                     <div
                       onClick={() => setorder("All")}
-                      className="bg-[#202123] hover:border-[#61626D] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                      className="bg-[#202123] hover:border-[#353740] rounded-md px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
                     >
                       <span className="text-white font-medium">All</span>
                     </div>
@@ -218,7 +220,7 @@ const ListGPT = () => {
                   <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[4px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
                     <div
                       onClick={() => setorder("Popular")}
-                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                      className="bg-[#202123] rounded-md hover:border-[#353740] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
                     >
                       <span className="text-white font-medium">Popular</span>
                     </div>
@@ -230,7 +232,7 @@ const ListGPT = () => {
                     </div>
                     <div
                       onClick={() => setorder("All")}
-                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                      className="bg-[#202123] rounded-md hover:border-[#353740] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
                     >
                       <span className="text-white font-medium">All</span>
                     </div>
@@ -240,13 +242,13 @@ const ListGPT = () => {
                   <div className="bg-[#202123] w-[300px]  my-[20px] rounded-md flex flex-row p-[4px] space-x-2 text-[15px] relative border-[#61626D] border-[1px]">
                     <div
                       onClick={() => setorder("Popular")}
-                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                      className="bg-[#202123] rounded-md hover:border-[#353740] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
                     >
                       <span className="text-white font-medium">Popular</span>
                     </div>
                     <div
                       onClick={() => setorder("New")}
-                      className="bg-[#202123] rounded-md hover:border-[#61626D] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
+                      className="bg-[#202123] rounded-md hover:border-[#353740] px-[2.5px] py-[5px] w-[100px] border border-[#202123] flex flex-row justify-center items-center hover:cursor-pointer"
                     >
                       <span className="text-white font-medium">New</span>
                     </div>
