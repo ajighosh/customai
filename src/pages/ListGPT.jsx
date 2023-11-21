@@ -100,7 +100,7 @@ const ListGPT = () => {
 
   const handleDeleteGPT = async (id) => {
     const userInput = window.prompt(
-      "For Edditing/Deleting GPT's please contact help@customgpts.in."
+      "For Editing/Deleting GPT's please contact help@customgpts.in."
     );
     if (userInput !== null && userInput.trim() === password) {
       setloading(true);
@@ -147,7 +147,7 @@ const ListGPT = () => {
 
   const handleEditClick = (id) => {
     const userInput = window.prompt(
-      "For Edditing/Deleting GPT's please contact help@customgpts.in."
+      "For Editing/Deleting GPT's please contact help@customgpts.in."
     );
     if (userInput !== null && userInput.trim() === password) {
       navigate(`/edit/${id}`);
